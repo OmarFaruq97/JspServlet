@@ -1,0 +1,138 @@
+package omar.sms.student;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/StudentServlet")
+public class StudentServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private StudentDAO studentDAO;
+
+    public void init() {
+        studentDAO = new StudentDAO();
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        try {
+            switch (action) {
+                case "register":
+                    registerStudent(request, response);
+                    break;
+                case "update":
+                    updateStudent(request, response);
+                    break;
+                case "delete":
+                    deleteStudent(request, response);
+                    break;
+                default:
+                    response.sendRedirect("error.jsp");  // Redirect to an error page for invalid actions
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+    }
+
+    private void registerStudent(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+        try {
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
+            String fatherName = request.getParameter("fatherName");
+            String motherName = request.getParameter("motherName");
+            String presentAddress = request.getParameter("presentAddress");
+            String permanentAddress = request.getParameter("permanentAddress");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String gender = request.getParameter("gender");
+            String qualification = request.getParameter("qualification");
+            String uploadedFile = request.getParameter("uploadedFile");
+            
+            // Validate and parse date
+            String dateStr = request.getParameter("dateOfBirth");
+            Date dateOfBirth = null;
+            if (dateStr != null && !dateStr.isEmpty()) {
+                try {
+                    dateOfBirth = Date.valueOf(dateStr);  // Convert only if valid
+                } catch (IllegalArgumentException e) {
+                    request.setAttribute("errorMessage", "Invalid Date Format! Use YYYY-MM-DD.");
+                    request.getRequestDispatcher("error.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            int age = Integer.parseInt(request.getParameter("age"));
+
+            Student student = new Student(firstName, lastName, fatherName, motherName, presentAddress, permanentAddress, email, password, dateOfBirth, age, gender, qualification, uploadedFile);
+            studentDAO.addStudent(student);
+
+            response.sendRedirect("success.jsp");  // Redirect after successful registration
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Error Registering Student: " + e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+    }
+
+    private void updateStudent(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String firstName = request.getParameter("firstName");
+            String lastName = request.getParameter("lastName");
+            String fatherName = request.getParameter("fatherName");
+            String motherName = request.getParameter("motherName");
+            String presentAddress = request.getParameter("presentAddress");
+            String permanentAddress = request.getParameter("permanentAddress");
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            String gender = request.getParameter("gender");
+            String qualification = request.getParameter("qualification");
+            String uploadedFile = request.getParameter("uploadedFile");
+
+            // Validate and parse date
+            String dateStr = request.getParameter("dateOfBirth");
+            Date dateOfBirth = null;
+            if (dateStr != null && !dateStr.isEmpty()) {
+                try {
+                    dateOfBirth = Date.valueOf(dateStr);
+                } catch (IllegalArgumentException e) {
+                    request.setAttribute("errorMessage", "Invalid Date Format! Use YYYY-MM-DD.");
+                    request.getRequestDispatcher("error.jsp").forward(request, response);
+                    return;
+                }
+            }
+
+            int age = Integer.parseInt(request.getParameter("age"));
+
+            Student student = new Student(id, firstName, lastName, fatherName, motherName, presentAddress, permanentAddress, email, password, dateOfBirth, age, gender, qualification, uploadedFile);
+            studentDAO.updateStudent(student);
+
+            response.sendRedirect("success.jsp");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Error Updating Student: " + e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+    }
+
+    private void deleteStudent(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            studentDAO.deleteStudent(id);
+            response.sendRedirect("success.jsp");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Error Deleting Student: " + e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+    }
+}

@@ -1,0 +1,55 @@
+package jsp.product.reg;
+
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/Form/ProductServlet") // Modify this URL pattern based on your structure
+public class ProductServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+    private ProductDAO productDAO;
+
+    @Override
+    public void init() {
+        // Initialize ProductDAO object for database interaction
+        productDAO = new ProductDAO();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String action = request.getParameter("action");
+
+        if ("add".equals(action)) {
+        	int productid = Integer.parseInt(request.getParameter("product_id"));
+            String productName = request.getParameter("product_name");
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            double price = Double.parseDouble(request.getParameter("price"));
+
+            // Create a Product object with the collected form data
+            Product product = new Product(productName, quantity, price);
+
+            try {
+                // Add product to the database
+                productDAO.addProduct(product);
+
+                // Redirect to the list page after adding the product successfully
+                response.sendRedirect("listAllProducts.jsp");
+            } catch (SQLException e) {
+                // Handle any errors that occur during database interaction
+                String errorMessage = "Error adding product: " + e.getMessage();
+                request.setAttribute("errorMessage", errorMessage);
+
+                // Forward request back to the product registration page
+                request.getRequestDispatcher("addProduct.jsp").forward(request, response);
+            }
+        }
+    }
+}

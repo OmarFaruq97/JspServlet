@@ -1,0 +1,5 @@
+package omar.sms.database;
+
+public class DBConnection {
+
+}

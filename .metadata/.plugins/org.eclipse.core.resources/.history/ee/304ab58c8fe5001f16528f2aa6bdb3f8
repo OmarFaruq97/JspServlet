@@ -1,0 +1,5 @@
+package omar.sms.student;
+
+public class Student {
+
+}
