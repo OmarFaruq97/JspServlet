@@ -1,9 +1,5 @@
 INDEX VERSION 1.134
-C:\Users\user\Documents\workspace-spring-tool-suite-4-4.27.0.RELEASE\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2423402980.index
+C:\Git\JspServlet\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2423402980.index
 \Form\src\main\java
-C:\Users\user\Documents\workspace-spring-tool-suite-4-4.27.0.RELEASE\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3637378440.index
-\MyRasel\src\main\java
-C:\Users\user\Documents\workspace-spring-tool-suite-4-4.27.0.RELEASE\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3192600330.index
-\Form\src\main\java
-C:\Users\user\Documents\workspace-spring-tool-suite-4-4.27.0.RELEASE\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\23683842.index
+C:\Git\JspServlet\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\23683842.index
 \Form\src\main\java
